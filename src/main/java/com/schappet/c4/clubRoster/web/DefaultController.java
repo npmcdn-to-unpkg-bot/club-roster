@@ -1,4 +1,4 @@
-package com.schappet.c4.web;
+package com.schappet.c4.clubRoster.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
