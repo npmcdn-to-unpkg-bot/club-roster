@@ -32,8 +32,8 @@
 		<put-attribute name="body" value="/WEB-INF/jsp/{1}.jsp" />
 	</definition>
  	
- 	<definition name="/club-roster/*/*" extends="baseTemplate">
-		<put-attribute name="body" value="/WEB-INF/jsp/club-roster/{1}/{2}.jsp" />
+ 	<definition name="/clubroster/*/*" extends="baseTemplate">
+		<put-attribute name="body" value="/WEB-INF/jsp/clubroster/{1}/{2}.jsp" />
 	</definition>
 	
 </tiles-definitions>

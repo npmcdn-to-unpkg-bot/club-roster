@@ -23,10 +23,10 @@
 	    <property name="password" value="" />
 	</bean>
 
-	<bean id="createSchema" class="com.schappet.c4.spring.HsqlCreateSchema"  init-method="create">
+	<bean id="createSchema" class="edu.uiowa.icts.spring.HsqlCreateSchema"  init-method="create">
 		<property name="schemas">
 			<list>
-				<value>club-roster</value>
+				<value>clubroster</value>
 				
 			</list>
 		</property>
@@ -39,7 +39,7 @@
 		<!-- Hibernate SessionFactory -->
 		<property name="packagesToScan">
 			<list>
-				<value>com.schappet.c4.club_roster</value>
+				<value>com.schappet.c4.clubRoster</value>
 			</list>
 		</property>
 		<property name="dataSource" ref="dataSource" />
@@ -55,7 +55,7 @@
 				<prop key="hibernate.hbm2ddl.auto">create-drop</prop>
 			<!-- 	<prop key="hibernate.show_sql">true</prop> -->
 				<prop key="hibernate.configurationClass">org.hibernate.cfg.AnnotationConfiguration</prop>
-				<prop key="hibernate.default_schema">club-roster</prop>
+				<prop key="hibernate.default_schema">clubroster</prop>
 			</props>
 		</property>
 	</bean>

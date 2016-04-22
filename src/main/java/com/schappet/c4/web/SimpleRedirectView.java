@@ -1,4 +1,4 @@
-package com.schappet.c4.club_roster.web;
+package com.schappet.c4.web;
 
 import org.springframework.web.servlet.view.RedirectView;
 

@@ -1,4 +1,4 @@
-package com.schappet.c4.club_roster.web;
+package com.schappet.c4.web;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.ModelAndView;
 
 import edu.uiowa.icts.exception.MappingNotFoundException;
-import com.schappet.c4.exception.MappingNotFoundException;
 
 @Controller
 @RequestMapping( "/*" )

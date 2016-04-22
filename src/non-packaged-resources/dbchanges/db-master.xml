@@ -9,7 +9,7 @@
 	</preConditions>
     
     <changeSet author="rmjames" id="createSequence">
-	     <sql>CREATE SEQUENCE club-roster.seqnum INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807  START 1 CACHE 1;</sql>
+	     <sql>CREATE SEQUENCE clubroster.seqnum INCREMENT 1 MINVALUE 1 MAXVALUE 9223372036854775807  START 1 CACHE 1;</sql>
 	</changeSet>
 	
 	<include file="db-create-postgres.xml" />

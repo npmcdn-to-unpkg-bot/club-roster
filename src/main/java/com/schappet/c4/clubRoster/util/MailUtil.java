@@ -1,4 +1,4 @@
-package com.schappet.c4.club_roster.util;
+package com.schappet.c4.clubRoster.util;
 
 import java.util.regex.Pattern;
 
