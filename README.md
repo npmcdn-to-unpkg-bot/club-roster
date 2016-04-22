@@ -2,7 +2,8 @@
 ===============================================
 
 # Background
-Brief description of what the what the application is and why it's important.
+
+This is a Club Roster Application for Iowa City Camera Club - C4 
 
 This component provides major feature one...
 
