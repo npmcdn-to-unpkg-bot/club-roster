@@ -352,7 +352,15 @@
 				<version>${jetty.version}</version>
 				<configuration>
 					<scanIntervalSeconds>10</scanIntervalSeconds>
+					
 				</configuration>
+				<dependencies>
+					<dependency>
+								<groupId>org.postgresql</groupId>
+								<artifactId>postgresql</artifactId>
+								<version>${postgres.version}</version>
+					</dependency>
+				</dependencies>
 			</plugin>
 
 			<plugin>
