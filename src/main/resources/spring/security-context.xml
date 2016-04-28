@@ -12,6 +12,7 @@
 	<http pattern="/resources/**" security="none"/>
     <http pattern="/favicon.ico" security="none"/>
     <http use-expressions="true">
+    	<csrf disabled="true"/>
     	
     	<!-- <custom-filter ref="switchUserProcessingFilter" after="FILTER_SECURITY_INTERCEPTOR" /> -->
 		
@@ -31,7 +32,7 @@
         <intercept-url pattern="/index.jsp" access="permitAll" />
         <intercept-url pattern="/" access="permitAll" />
      
-		<!-- <intercept-url pattern="/**" access="isAuthenticated()" /> -->
+		<intercept-url pattern="/**" access="isAuthenticated()" />
 		
 		<form-login login-page="/login" authentication-failure-url="/login?error=true"/>
 		<logout logout-url="/logout" logout-success-url="/" invalidate-session="true" />
@@ -43,14 +44,17 @@
 		</session-management>
     </http>
     
-    <ldap-server id="ldapServer" url="${ldap.url}" root="${ldap.root}" manager-dn="${ldap.bind.user}" manager-password="${ldap.bind.password}"  />
-    
-    <ldap-user-service id="userDetailsService" server-ref="ldapServer" user-search-filter="(cn={0})" group-search-base="${ldap.root}" 
-    				   user-search-base="${ldap.root}" group-search-filter="(member={0})"  />
 
-    <authentication-manager>
-    	<ldap-authentication-provider server-ref="ldapServer" user-search-filter="cn={0}" group-search-base="${ldap.root}" 
-    	                              group-search-filter="(member={0})" group-role-attribute="cn" user-search-base="${ldap.root}" />
-    </authentication-manager>
+	<authentication-manager>
+		<authentication-provider>
+		<!--  
+		   	<password-encoder hash="md5" />
+		-->
+	    	<jdbc-user-service data-source-ref="dataSource" 
+	    	users-by-username-query="select username,password, 'true' as enable  from clubroster.club_Member where username=?"
+	    	 authorities-by-username-query="select username , 'ADMIN' from clubroster.club_Member where username = ?" 
+	    	 />
+		</authentication-provider>
+	</authentication-manager>
 
 </beans:beans>

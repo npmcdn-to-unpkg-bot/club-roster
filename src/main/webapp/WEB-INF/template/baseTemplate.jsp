@@ -3,7 +3,7 @@
 <%@ include file="/WEB-INF/include.jsp"%>
 <%@ taglib uri="http://tiles.apache.org/tags-tiles" prefix="tiles"%>
 
-<html>
+<html >
 	<head>
 		<tiles:insertAttribute name="head" />
 	</head>

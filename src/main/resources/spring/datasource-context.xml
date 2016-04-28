@@ -4,28 +4,15 @@
 	xsi:schemaLocation="http://www.springframework.org/schema/beans 
                         http://www.springframework.org/schema/beans/spring-beans.xsd">
     
-<!--     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource"> -->
-<!-- 	    for Remember Me functionality -->
-<!-- 	    <property name="driverClassName" value="${database.driver.class}" /> -->
-<!-- 	    <property name="url" value="${database.url}" /> -->
-<!-- 	    <property name="username" value="${database.username}" /> -->
-<!-- 	    <property name="password" value="${database.password}" /> -->
-<!-- 	</bean> -->
-
-
    <bean class="java.net.URI" id="dbUrl">
         <constructor-arg value="#{systemEnvironment['DATABASE_URL']}"/>
     </bean>
     
     <bean id="dataSource" class="org.springframework.jdbc.datasource.DriverManagerDataSource">
 	    <property name="driverClassName" value="${database.driver.class}" />
-	    <!-- <property name="url" value="${database.url}" /> -->
-	    <!-- <property name="username" value="${database.username}" /> -->
-	    <!-- <property name="password" value="${database.password}" /> -->
-
-    <property name="url" value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() }"/>
-    <property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>
-    <property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
+	    <property name="url" value="#{ 'jdbc:postgresql://' + @dbUrl.getHost() + ':' + @dbUrl.getPort() + @dbUrl.getPath() }"/>
+    	<property name="username" value="#{ @dbUrl.getUserInfo().split(':')[0] }"/>
+    	<property name="password" value="#{ @dbUrl.getUserInfo().split(':')[1] }"/>
 	</bean>
 	
 	<bean id="sessionFactory" name="sessionFactory" class="org.springframework.orm.hibernate4.LocalSessionFactoryBean">
@@ -37,8 +24,8 @@
 		</property>
 		<property name="hibernateProperties">
 			<props>
-				<prop key="show_sql">true</prop>
-				<prop key="configurationClass">org.hibernate.cfg.AnnotationConfiguration</prop>
+				<prop key="hibernate.show_sql">true</prop>
+				<prop key="hibernate.configurationClass">org.hibernate.cfg.AnnotationConfiguration</prop>
 				<prop key="hibernate.dialect">${database.dialect}</prop>	
 				<prop key="hibernate.c3p0.min_size">5</prop>
 				<prop key="hibernate.c3p0.max_size">20</prop>
