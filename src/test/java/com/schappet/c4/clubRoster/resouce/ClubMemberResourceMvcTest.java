@@ -18,6 +18,7 @@ import org.hamcrest.core.IsNull;
 import org.junit.Before;
 import org.junit.Test;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.schappet.c4.clubRoster.controller.AbstractControllerMVCTests;
@@ -51,8 +52,9 @@ public class ClubMemberResourceMvcTest extends AbstractControllerMVCTests {
     }    
       
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void getByPathVariableIdShouldLoadAndReturnObject() throws Exception {
-    	mockMvc.perform(get("null/clubmember/"+firstClubMember.getMemberId().toString()))
+    	mockMvc.perform(get("/rest/clubmember/"+firstClubMember.getMemberId().toString()))
          .andExpect(status().isOk())
          .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(jsonPath("$.memberId", is(firstClubMember.getMemberId())))
@@ -60,25 +62,28 @@ public class ClubMemberResourceMvcTest extends AbstractControllerMVCTests {
     }
   
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void getByPathVariableIdShouldReturn404ForBogusId() throws Exception {
-    	mockMvc.perform(get("null/clubmember/-123")).andExpect(status().isNotFound()).andExpect(jsonPath("$.message", is("null/clubmember/-123 could not be found.")));
+    	mockMvc.perform(get("/rest/clubmember/-123")).andExpect(status().isNotFound()).andExpect(jsonPath("$.message", is("/rest/clubmember/-123 could not be found.")));
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void restMappingNotFoundShouldReturn404() throws Exception {
-    	mockMvc.perform(get("null/clubmember/asdfasdf/asdfasdf"))
+    	mockMvc.perform(get("/rest/clubmember/asdfasdf/asdfasdf"))
     	.andExpect(status().isNotFound())
     	 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-        .andExpect(jsonPath("$.message", is("null/clubmember/asdfasdf/asdfasdf could not be found.")))
+        .andExpect(jsonPath("$.message", is("/rest/clubmember/asdfasdf/asdfasdf could not be found.")))
     	;
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void createShouldPersistAndReturnObject() throws Exception {
 	   long count = clubRosterDaoService.getClubMemberService().count();	       
 	   ClubMember clubMember = new ClubMember(); 
        
-       mockMvc.perform(post("null/clubmember/").content(this.mapper.writeValueAsString(clubMember))
+       mockMvc.perform(post("/rest/clubmember/").content(this.mapper.writeValueAsString(clubMember))
 	   .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
 	   .with(csrf()))
        .andExpect(status().isOk())
@@ -90,10 +95,11 @@ public class ClubMemberResourceMvcTest extends AbstractControllerMVCTests {
 	}
      
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void updateShouldPersistExistingAndReturnObject() throws Exception {
        long count = clubRosterDaoService.getClubMemberService().count();
 
-       mockMvc.perform(post("null/clubmember/"+ firstClubMember.getMemberId().toString())
+       mockMvc.perform(post("/rest/clubmember/"+ firstClubMember.getMemberId().toString())
     		   .content(this.mapper.writeValueAsString(firstClubMember))
     		   .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
     		   .with(csrf()))
@@ -106,57 +112,62 @@ public class ClubMemberResourceMvcTest extends AbstractControllerMVCTests {
   	}  
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void updateByPathVariableIdShouldReturn404ForMismatchBetweenPathIdAndObjectId() throws Exception {	       
        String correctId =  firstClubMember.getMemberId().toString();
        // this ID manipulation should be overwritten with path variable id
        firstClubMember.setMemberId(-123);
        
-       mockMvc.perform(post("null/clubmember/"+correctId)
+       mockMvc.perform(post("/rest/clubmember/"+correctId)
     		   .content(this.mapper.writeValueAsString(firstClubMember))
     		   .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
     		   .with(csrf()))
        .andExpect(status().isNotFound())
        .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-       .andExpect(jsonPath("$.message", is("null/clubmember/" +correctId +" could not be found.")))
+       .andExpect(jsonPath("$.message", is("/rest/clubmember/" +correctId +" could not be found.")))
        ;
   	} 
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void updateByPathVariableIdShouldReturn404ForBogusPathId() throws Exception {
-    	mockMvc.perform(post("null/clubmember/-123")
+    	mockMvc.perform(post("/rest/clubmember/-123")
     			.content(this.mapper.writeValueAsString(firstClubMember))
     		   .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
     		   .with(csrf()))
     	.andExpect(status().isNotFound())
     	.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-	    .andExpect(jsonPath("$.message", is("null/clubmember/-123 could not be found.")));
+	    .andExpect(jsonPath("$.message", is("/rest/clubmember/-123 could not be found.")));
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void deleteShouldDeleteAndReturnStatusOk() throws Exception {
         long count = clubRosterDaoService.getClubMemberService().count();
 
-        mockMvc.perform(delete("null/clubmember/"+ firstClubMember.getMemberId().toString()).with(csrf()))
+        mockMvc.perform(delete("/rest/clubmember/"+ firstClubMember.getMemberId().toString()).with(csrf()))
        .andExpect(status().isOk());  
        
        assertEquals("count should decrease by 1", count - 1 , clubRosterDaoService.getClubMemberService().count());
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void deleteShouldFailWithBogusId() throws Exception {
         long count = clubRosterDaoService.getClubMemberService().count();
 
-        mockMvc.perform(delete("null/clubmember/-123").with(csrf()))
+        mockMvc.perform(delete("/rest/clubmember/-123").with(csrf()))
        .andExpect(status().isNotFound())
        .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-       .andExpect(jsonPath("$.message", is("null/clubmember/-123 could not be found.")));  
+       .andExpect(jsonPath("$.message", is("/rest/clubmember/-123 could not be found.")));  
        
        assertEquals("count should NOT decrease by 1", count , clubRosterDaoService.getClubMemberService().count());
     }
 
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void listShouldReturnAllByDefault() throws Exception {
-    	mockMvc.perform(get("null/clubmember/"))
+    	mockMvc.perform(get("/rest/clubmember/"))
          .andExpect(status().isOk())
          .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
          .andExpect(jsonPath("$.", hasSize(is(20))))
@@ -165,8 +176,9 @@ public class ClubMemberResourceMvcTest extends AbstractControllerMVCTests {
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void listShouldReturnAllByDefaultWithoutTrailUrlSlash() throws Exception {
-    	mockMvc.perform(get("null/clubmember"))
+    	mockMvc.perform(get("/rest/clubmember"))
          .andExpect(status().isOk())
          .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
          .andExpect(jsonPath("$.", hasSize(is(20))))

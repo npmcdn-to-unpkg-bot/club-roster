@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -62,8 +63,9 @@ public class GearResourceMvcTest extends AbstractControllerMVCTests {
     }    
       
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void getByPathVariableIdShouldLoadAndReturnObject() throws Exception {
-    	mockMvc.perform(get("null/gear/"+firstGear.getGearId().toString()))
+    	mockMvc.perform(get("/rest/gear/"+firstGear.getGearId().toString()))
          .andExpect(status().isOk())
          .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(jsonPath("$.gearId", is(firstGear.getGearId())))
@@ -71,25 +73,28 @@ public class GearResourceMvcTest extends AbstractControllerMVCTests {
     }
   
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void getByPathVariableIdShouldReturn404ForBogusId() throws Exception {
-    	mockMvc.perform(get("null/gear/-123")).andExpect(status().isNotFound()).andExpect(jsonPath("$.message", is("null/gear/-123 could not be found.")));
+    	mockMvc.perform(get("/rest/gear/-123")).andExpect(status().isNotFound()).andExpect(jsonPath("$.message", is("/rest/gear/-123 could not be found.")));
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void restMappingNotFoundShouldReturn404() throws Exception {
-    	mockMvc.perform(get("null/gear/asdfasdf/asdfasdf"))
+    	mockMvc.perform(get("/rest/gear/asdfasdf/asdfasdf"))
     	.andExpect(status().isNotFound())
     	 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-        .andExpect(jsonPath("$.message", is("null/gear/asdfasdf/asdfasdf could not be found.")))
+        .andExpect(jsonPath("$.message", is("/rest/gear/asdfasdf/asdfasdf could not be found.")))
     	;
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void createShouldPersistAndReturnObject() throws Exception {
 	   long count = clubRosterDaoService.getGearService().count();	       
 	   Gear gear = new Gear(); 
        
-       mockMvc.perform(post("null/gear/").content(this.mapper.writeValueAsString(gear))
+       mockMvc.perform(post("/rest/gear/").content(this.mapper.writeValueAsString(gear))
 	   .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
 	   .with(csrf()))
        .andExpect(status().isOk())
@@ -101,10 +106,11 @@ public class GearResourceMvcTest extends AbstractControllerMVCTests {
 	}
      
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void updateShouldPersistExistingAndReturnObject() throws Exception {
        long count = clubRosterDaoService.getGearService().count();
 
-       mockMvc.perform(post("null/gear/"+ firstGear.getGearId().toString())
+       mockMvc.perform(post("/rest/gear/"+ firstGear.getGearId().toString())
     		   .content(this.mapper.writeValueAsString(firstGear))
     		   .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
     		   .with(csrf()))
@@ -117,57 +123,62 @@ public class GearResourceMvcTest extends AbstractControllerMVCTests {
   	}  
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void updateByPathVariableIdShouldReturn404ForMismatchBetweenPathIdAndObjectId() throws Exception {	       
        String correctId =  firstGear.getGearId().toString();
        // this ID manipulation should be overwritten with path variable id
        firstGear.setGearId(-123);
        
-       mockMvc.perform(post("null/gear/"+correctId)
+       mockMvc.perform(post("/rest/gear/"+correctId)
     		   .content(this.mapper.writeValueAsString(firstGear))
     		   .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
     		   .with(csrf()))
        .andExpect(status().isNotFound())
        .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-       .andExpect(jsonPath("$.message", is("null/gear/" +correctId +" could not be found.")))
+       .andExpect(jsonPath("$.message", is("/rest/gear/" +correctId +" could not be found.")))
        ;
   	} 
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void updateByPathVariableIdShouldReturn404ForBogusPathId() throws Exception {
-    	mockMvc.perform(post("null/gear/-123")
+    	mockMvc.perform(post("/rest/gear/-123")
     			.content(this.mapper.writeValueAsString(firstGear))
     		   .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
     		   .with(csrf()))
     	.andExpect(status().isNotFound())
     	.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-	    .andExpect(jsonPath("$.message", is("null/gear/-123 could not be found.")));
+	    .andExpect(jsonPath("$.message", is("/rest/gear/-123 could not be found.")));
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void deleteShouldDeleteAndReturnStatusOk() throws Exception {
         long count = clubRosterDaoService.getGearService().count();
 
-        mockMvc.perform(delete("null/gear/"+ firstGear.getGearId().toString()).with(csrf()))
+        mockMvc.perform(delete("/rest/gear/"+ firstGear.getGearId().toString()).with(csrf()))
        .andExpect(status().isOk());  
        
        assertEquals("count should decrease by 1", count - 1 , clubRosterDaoService.getGearService().count());
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void deleteShouldFailWithBogusId() throws Exception {
         long count = clubRosterDaoService.getGearService().count();
 
-        mockMvc.perform(delete("null/gear/-123").with(csrf()))
+        mockMvc.perform(delete("/rest/gear/-123").with(csrf()))
        .andExpect(status().isNotFound())
        .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-       .andExpect(jsonPath("$.message", is("null/gear/-123 could not be found.")));  
+       .andExpect(jsonPath("$.message", is("/rest/gear/-123 could not be found.")));  
        
        assertEquals("count should NOT decrease by 1", count , clubRosterDaoService.getGearService().count());
     }
 
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void listShouldReturnAllByDefault() throws Exception {
-    	mockMvc.perform(get("null/gear/"))
+    	mockMvc.perform(get("/rest/gear/"))
          .andExpect(status().isOk())
          .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
          .andExpect(jsonPath("$.", hasSize(is(20))))
@@ -176,8 +187,9 @@ public class GearResourceMvcTest extends AbstractControllerMVCTests {
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void listShouldReturnAllByDefaultWithoutTrailUrlSlash() throws Exception {
-    	mockMvc.perform(get("null/gear"))
+    	mockMvc.perform(get("/rest/gear"))
          .andExpect(status().isOk())
          .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
          .andExpect(jsonPath("$.", hasSize(is(20))))

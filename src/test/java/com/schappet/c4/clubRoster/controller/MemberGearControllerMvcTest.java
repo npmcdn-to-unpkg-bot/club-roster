@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -58,6 +59,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
           }
 
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void addShouldDisplayNewMemberGearForm() throws Exception {
        mockMvc.perform(get("/membergear/add"))
        .andExpect(status().isOk())
@@ -66,6 +68,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void listShouldSimplyLoadPage() throws Exception {
        mockMvc.perform(get("/membergear/list"))
        .andExpect(status().isOk())
@@ -73,6 +76,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void indexShouldDisplayListPage() throws Exception {
        mockMvc.perform(get("/membergear/"))
        .andExpect(status().isOk())
@@ -80,6 +84,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void listAltShouldLoadListOfMemberGears() throws Exception {
        mockMvc.perform(get("/membergear/list_alt"))
        .andExpect(status().isOk())
@@ -90,6 +95,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
     
           	  
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void saveNewShouldPersistAndRedirectToListView() throws Exception {
        long count = clubRosterDaoService.getMemberGearService().count();
        
@@ -99,6 +105,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
 	}
      
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void saveExistingShouldPersistAndRedirectToListView() throws Exception {
        long count = clubRosterDaoService.getMemberGearService().count();
          
@@ -108,6 +115,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
   	}      
   
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void editShouldLoadObjectAndDisplayForm() throws Exception {
     	mockMvc.perform(get("/membergear/edit").param("memberGearId", firstMemberGear.getMemberGearId().toString()))
          .andExpect(status().isOk())
@@ -116,6 +124,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void showShouldLoadAndDisplayObject() throws Exception {
     	mockMvc.perform(get("/membergear/show").param("memberGearId", firstMemberGear.getMemberGearId().toString()))
          .andExpect(status().isOk())
@@ -124,6 +133,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void deleteGetShouldLoadAndDisplayYesNoButtons() throws Exception {
     	mockMvc.perform(get("/membergear/delete").param("memberGearId", firstMemberGear.getMemberGearId().toString()))
          .andExpect(status().isOk())
@@ -132,6 +142,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void deletePostSubmitYesShouldDeleteAndRedirectToListView() throws Exception {
         long count = clubRosterDaoService.getMemberGearService().count();
 
@@ -142,6 +153,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void deletePostSubmitNoShouldNotDeleteAndRedirectToListView() throws Exception {
         long count = clubRosterDaoService.getMemberGearService().count();
 
@@ -152,6 +164,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
     }
       
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void defaultDatatableShouldReturnJSONDataWith10Rows() throws Exception {
     	DataTableRequest dtr = getDataTableRequest( Arrays.asList("urls","clubMember","gear","memberGearId" ));
     	ObjectMapper mapper = new ObjectMapper();
@@ -174,6 +187,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
     }
     	  
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void defaultDatatableShouldReturnJSONDataWith10RowsAndDisplayAltnerateGlyphiconURLsAsEmptyByDefault() throws Exception {
     	DataTableRequest dtr = getDataTableRequest( Arrays.asList("urls","clubMember","gear","memberGearId" ));
     	ObjectMapper mapper = new ObjectMapper();
@@ -194,6 +208,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void defaultDatatableShouldReturnErrorTextForBogusColumnName() throws Exception {
     	DataTableRequest dtr = new DataTableRequest();
     	dtr.setStart(1);
@@ -225,6 +240,7 @@ public class MemberGearControllerMvcTest extends AbstractControllerMVCTests {
     }    
     	  
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void defaultDatatableShouldReturnExceptionBecauseCantSearchColumnThatDoesntExist() throws Exception {			
 		DataTableRequest dtr = new DataTableRequest();
     	dtr.setStart(1);

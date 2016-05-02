@@ -11,6 +11,7 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
@@ -62,8 +63,9 @@ public class MemberGearResourceMvcTest extends AbstractControllerMVCTests {
     }    
       
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void getByPathVariableIdShouldLoadAndReturnObject() throws Exception {
-    	mockMvc.perform(get("null/membergear/"+firstMemberGear.getMemberGearId().toString()))
+    	mockMvc.perform(get("/rest/membergear/"+firstMemberGear.getMemberGearId().toString()))
          .andExpect(status().isOk())
          .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
         .andExpect(jsonPath("$.memberGearId", is(firstMemberGear.getMemberGearId())))
@@ -71,25 +73,28 @@ public class MemberGearResourceMvcTest extends AbstractControllerMVCTests {
     }
   
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void getByPathVariableIdShouldReturn404ForBogusId() throws Exception {
-    	mockMvc.perform(get("null/membergear/-123")).andExpect(status().isNotFound()).andExpect(jsonPath("$.message", is("null/membergear/-123 could not be found.")));
+    	mockMvc.perform(get("/rest/membergear/-123")).andExpect(status().isNotFound()).andExpect(jsonPath("$.message", is("/rest/membergear/-123 could not be found.")));
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void restMappingNotFoundShouldReturn404() throws Exception {
-    	mockMvc.perform(get("null/membergear/asdfasdf/asdfasdf"))
+    	mockMvc.perform(get("/rest/membergear/asdfasdf/asdfasdf"))
     	.andExpect(status().isNotFound())
     	 .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-        .andExpect(jsonPath("$.message", is("null/membergear/asdfasdf/asdfasdf could not be found.")))
+        .andExpect(jsonPath("$.message", is("/rest/membergear/asdfasdf/asdfasdf could not be found.")))
     	;
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void createShouldPersistAndReturnObject() throws Exception {
 	   long count = clubRosterDaoService.getMemberGearService().count();	       
 	   MemberGear memberGear = new MemberGear(); 
        
-       mockMvc.perform(post("null/membergear/").content(this.mapper.writeValueAsString(memberGear))
+       mockMvc.perform(post("/rest/membergear/").content(this.mapper.writeValueAsString(memberGear))
 	   .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
 	   .with(csrf()))
        .andExpect(status().isOk())
@@ -101,10 +106,11 @@ public class MemberGearResourceMvcTest extends AbstractControllerMVCTests {
 	}
      
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void updateShouldPersistExistingAndReturnObject() throws Exception {
        long count = clubRosterDaoService.getMemberGearService().count();
 
-       mockMvc.perform(post("null/membergear/"+ firstMemberGear.getMemberGearId().toString())
+       mockMvc.perform(post("/rest/membergear/"+ firstMemberGear.getMemberGearId().toString())
     		   .content(this.mapper.writeValueAsString(firstMemberGear))
     		   .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
     		   .with(csrf()))
@@ -117,57 +123,62 @@ public class MemberGearResourceMvcTest extends AbstractControllerMVCTests {
   	}  
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void updateByPathVariableIdShouldReturn404ForMismatchBetweenPathIdAndObjectId() throws Exception {	       
        String correctId =  firstMemberGear.getMemberGearId().toString();
        // this ID manipulation should be overwritten with path variable id
        firstMemberGear.setMemberGearId(-123);
        
-       mockMvc.perform(post("null/membergear/"+correctId)
+       mockMvc.perform(post("/rest/membergear/"+correctId)
     		   .content(this.mapper.writeValueAsString(firstMemberGear))
     		   .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
     		   .with(csrf()))
        .andExpect(status().isNotFound())
        .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-       .andExpect(jsonPath("$.message", is("null/membergear/" +correctId +" could not be found.")))
+       .andExpect(jsonPath("$.message", is("/rest/membergear/" +correctId +" could not be found.")))
        ;
   	} 
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void updateByPathVariableIdShouldReturn404ForBogusPathId() throws Exception {
-    	mockMvc.perform(post("null/membergear/-123")
+    	mockMvc.perform(post("/rest/membergear/-123")
     			.content(this.mapper.writeValueAsString(firstMemberGear))
     		   .accept(MediaType.APPLICATION_JSON).contentType(MediaType.APPLICATION_JSON)
     		   .with(csrf()))
     	.andExpect(status().isNotFound())
     	.andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-	    .andExpect(jsonPath("$.message", is("null/membergear/-123 could not be found.")));
+	    .andExpect(jsonPath("$.message", is("/rest/membergear/-123 could not be found.")));
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void deleteShouldDeleteAndReturnStatusOk() throws Exception {
         long count = clubRosterDaoService.getMemberGearService().count();
 
-        mockMvc.perform(delete("null/membergear/"+ firstMemberGear.getMemberGearId().toString()).with(csrf()))
+        mockMvc.perform(delete("/rest/membergear/"+ firstMemberGear.getMemberGearId().toString()).with(csrf()))
        .andExpect(status().isOk());  
        
        assertEquals("count should decrease by 1", count - 1 , clubRosterDaoService.getMemberGearService().count());
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void deleteShouldFailWithBogusId() throws Exception {
         long count = clubRosterDaoService.getMemberGearService().count();
 
-        mockMvc.perform(delete("null/membergear/-123").with(csrf()))
+        mockMvc.perform(delete("/rest/membergear/-123").with(csrf()))
        .andExpect(status().isNotFound())
        .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
-       .andExpect(jsonPath("$.message", is("null/membergear/-123 could not be found.")));  
+       .andExpect(jsonPath("$.message", is("/rest/membergear/-123 could not be found.")));  
        
        assertEquals("count should NOT decrease by 1", count , clubRosterDaoService.getMemberGearService().count());
     }
 
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void listShouldReturnAllByDefault() throws Exception {
-    	mockMvc.perform(get("null/membergear/"))
+    	mockMvc.perform(get("/rest/membergear/"))
          .andExpect(status().isOk())
          .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
          .andExpect(jsonPath("$.", hasSize(is(20))))
@@ -176,8 +187,9 @@ public class MemberGearResourceMvcTest extends AbstractControllerMVCTests {
     }
     
     @Test
+    @WithMockUser(username="user", roles={"ADMIN"})
     public void listShouldReturnAllByDefaultWithoutTrailUrlSlash() throws Exception {
-    	mockMvc.perform(get("null/membergear"))
+    	mockMvc.perform(get("/rest/membergear"))
          .andExpect(status().isOk())
          .andExpect(content().contentType(MediaType.APPLICATION_JSON_VALUE))
          .andExpect(jsonPath("$.", hasSize(is(20))))
